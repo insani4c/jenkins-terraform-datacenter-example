@@ -14,13 +14,14 @@ pipeline{
         stage('Terraform Init'){
             steps {
                 ansiColor('xterm') {
+                    git branch: 'main', url: 'https://github.com/insani4c/terraform-libvirt'
                     sh '''
                     echo "Authenticating to Azure using a service principal"
                     az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
 
                     echo "Initializing Terraform"
-                    cd my_datacenter/
-                    terraform init -backend-config="../configuration/backend.conf" --upgrade --reconfigure
+                    cd terraform-libvirt/deployment
+                    terraform init --upgrade --reconfigure
                     '''
                 }
             }
@@ -30,7 +31,7 @@ pipeline{
             steps {
                 ansiColor('xterm') {
                     sh '''
-                    cd my_datacenter/
+                    cd terraform-libvirt/deployment
                     terraform validate
                     '''
                 }
@@ -42,8 +43,8 @@ pipeline{
                 ansiColor('xterm') {
                     sh '''
                     echo "Creating Terraform Plan"
-                    cd my_datacenter
-                    terraform plan --var-file=../configuration/global_env.tfvars --var-file=../configuration/my_datacenter_env.tfvars -out /tmp/my_datacenter.plan
+                    cd terraform-libvirt/deployment
+                    terraform plan -out /tmp/my_datacenter.plan
                     '''
                 }
             }
@@ -63,7 +64,7 @@ pipeline{
                 ansiColor('xterm') {
                     sh '''
                     echo "Applying the plan"
-                    cd my_datacenter
+                    cd terraform-libvirt/deployment
                     terraform apply -parallelism 25 /tmp/my_datacenter.plan
                     '''
                 }
