@@ -16,8 +16,8 @@ pipeline{
                     dir('terraform-libvirt'){
                         git branch: 'main', url: 'https://github.com/insani4c/terraform-libvirt'
 
-                        printf "\e[36mInitializing Terraform\e[0m"
                         sh '''
+                        printf "\e[36mInitializing Terraform\e[0m"
                         cd deployment
                         terraform init --upgrade --reconfigure
                         '''
@@ -42,9 +42,9 @@ pipeline{
             steps {
                 ansiColor('xterm') {
                     dir('terraform-libvirt/deployment'){
-                        printf "\e[31mCreating Terraform Plan\e[0m"
                         sh '''
-                            terraform plan -out /tmp/my_datacenter.plan
+                        printf "\e[31mCreating Terraform Plan\e[0m"
+                        terraform plan -out /tmp/my_datacenter.plan
                         '''
                     }
                 }
@@ -64,8 +64,8 @@ pipeline{
             steps {
                 ansiColor('xterm') {
                     dir('terraform-libvirt/deployment'){
-                        printf "\e[32mApplying the plan\e[0m"
                         sh '''
+                        printf "\e[32mApplying the plan\e[0m"
                         terraform apply -parallelism 25 /tmp/my_datacenter.plan
                         '''
                     }
