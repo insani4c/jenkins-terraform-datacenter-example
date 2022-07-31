@@ -7,7 +7,6 @@ pipeline{
         TF_HOME = tool('Terraform 20706')
         TF_IN_AUTOMATION = "true"
         PATH = "$TF_HOME:$PATH"
-        ARM = credentials("$params.AZ_SP_ID")
     }
     stages {
 
@@ -16,9 +15,6 @@ pipeline{
                 ansiColor('xterm') {
                     git branch: 'main', url: 'https://github.com/insani4c/terraform-libvirt'
                     sh '''
-                    echo "Authenticating to Azure using a service principal"
-                    az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-
                     echo "Initializing Terraform"
                     cd terraform-libvirt/deployment
                     terraform init --upgrade --reconfigure
