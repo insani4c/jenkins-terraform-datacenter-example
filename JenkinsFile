@@ -13,7 +13,7 @@ pipeline{
         stage('Terraform Init'){
             steps {
                 ansiColor('xterm') {
-                    git branch: 'main', url: 'https://github.com/insani4c/terraform-libvirt'
+                    git branch: 'main', url: 'https://github.com/insani4c/terraform-libvirt', dir: 'terraform-libvirt'
                     sh '''
                     echo "Initializing Terraform"
                     cd terraform-libvirt/deployment
