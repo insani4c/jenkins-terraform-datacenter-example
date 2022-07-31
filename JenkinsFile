@@ -16,8 +16,8 @@ pipeline{
                     dir('terraform-libvirt'){
                         git branch: 'main', url: 'https://github.com/insani4c/terraform-libvirt'
 
+                        echo 'Initializing Terraform'
                         sh '''
-                        echo "Initializing Terraform"
                         cd deployment
                         terraform init --upgrade --reconfigure
                         '''
@@ -29,10 +29,11 @@ pipeline{
         stage('Terraform Validate'){
             steps {
                 ansiColor('xterm') {
-                    sh '''
-                    cd terraform-libvirt/deployment
-                    terraform validate
-                    '''
+                    dir('terraform-libvirt/deployment'){
+                        sh '''
+                        terraform validate
+                        '''
+                    }
                 }
             }
         }
@@ -40,11 +41,12 @@ pipeline{
         stage('Terraform Plan'){
             steps {
                 ansiColor('xterm') {
-                    sh '''
-                    echo "Creating Terraform Plan"
-                    cd terraform-libvirt/deployment
-                    terraform plan -out /tmp/my_datacenter.plan
-                    '''
+                    dir('terraform-libvirt/deployment'){
+                        echo 'Creating Terraform Plan'
+                        sh '''
+                            terraform plan -out /tmp/my_datacenter.plan
+                        '''
+                    }
                 }
             }
         }
@@ -61,11 +63,12 @@ pipeline{
         stage('Terraform Apply'){
             steps {
                 ansiColor('xterm') {
-                    sh '''
-                    echo "Applying the plan"
-                    cd terraform-libvirt/deployment
-                    terraform apply -parallelism 25 /tmp/my_datacenter.plan
-                    '''
+                    dir('terraform-libvirt/deployment'){
+                        echo 'Applying the plan'
+                        sh '''
+                        terraform apply -parallelism 25 /tmp/my_datacenter.plan
+                        '''
+                    }
                 }
             }
         }
