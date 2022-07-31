@@ -1,10 +1,10 @@
 pipeline{
     agent any
     tools {
-        "org.jenkinsci.plugins.terraform.TerraformInstallation" "Terraform 20607"
+        "org.jenkinsci.plugins.terraform.TerraformInstallation" "Terraform 20706"
     }
     environment {
-        TF_HOME = tool('Terraform 20607')
+        TF_HOME = tool('Terraform 20706')
         TF_IN_AUTOMATION = "true"
         PATH = "$TF_HOME:$PATH"
         ARM = credentials("$params.AZ_SP_ID")
