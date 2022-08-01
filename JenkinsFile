@@ -44,7 +44,7 @@ pipeline{
                     dir('terraform-libvirt/deployment'){
                         echo 'Creating Terraform Plan'
                         sh '''
-                        terraform plan -out /tmp/my_datacenter.plan
+                        terraform plan -out /tmp/jenkins_tf_${GIT_COMMIT}_${BUILD_ID}.plan
                         '''
                     }
                 }
@@ -66,7 +66,7 @@ pipeline{
                     dir('terraform-libvirt/deployment'){
                         echo 'Applying the plan'
                         sh '''
-                        terraform apply -parallelism 25 /tmp/my_datacenter.plan
+                        terraform apply -parallelism 25 /tmp/jenkins_tf_${GIT_COMMIT}_${BUILD_ID}.plan
                         '''
                     }
                 }
